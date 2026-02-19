@@ -23,6 +23,7 @@ The codes are implemented in C++.
 - [Difference Array](./Data%20Structures/Difference%20Array.cpp)
 - [Disjoint Set Union (DSU)](./Data%20Structures/DSU.cpp)
 - [Kadane's Algorithm](./Data%20Structures/Kadane.cpp)
+- [Minimum Queue](./Data%20Structures/Minimum%20Queue.cpp)
 - [2D Prefix Sum](./Data%20Structures/Prefix%202D.cpp)
 - [Segment Tree](./Data%20Structures/Segment%20Tree.cpp)
 - [Subarrays](./Data%20Structures/Subarrays.cpp)
