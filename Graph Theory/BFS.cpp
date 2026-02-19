@@ -1,4 +1,4 @@
-// 0-1 BFS
+// BFS
 // 
 // Encontra o menor caminho de um ponto a outro.
 // Parecido com o Dijkstra porem mais eficiente
