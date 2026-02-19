@@ -1,60 +1,74 @@
-# Biblioteca
+# Library
 
-Esta biblioteca é uma coletânea de algoritmos para auxiliar em competições de programação. 
+This library is a collection of algorithms to assist in programming competitions. 
 
-As [fontes](#referências) são de códigos já implementados por competidores avançados, livros de programação, fóruns
-ou mesmo por modificações pessoais.
+The [sources](#references) are from codes already implemented by advanced competitors, programming books, forums,
+or even personal modifications.
 
-Os códigos estão implementados em c++.
+The codes are implemented in C++.
 
-## Conteúdo
+## Contents
 
-### Progamação Dinâmica
+### Dynamic Programming
 
-- [Mochila com Bitmask](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/DP/knapsack.cpp)
+- [Edit Distance](./Dynamic%20Programming/Edit%20Distance.cpp)
+- [Knapsack](./Dynamic%20Programming/Knapsack.cpp)
+- [Longest Common Subsequence (LCS)](./Dynamic%20Programming/LCS.cpp)
+- [Longest Increasing Subsequence (LIS)](./Dynamic%20Programming/LIS.cpp)
+- [Subset Sum](./Dynamic%20Programming/Subset%20Sum.cpp)
 
-### Estruturas de Dados
+### Data Structures
 
-- [BIT (Fenwick Tree)](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Estruturas/bit.cpp)
+- [BIT (Fenwick Tree)](./Data%20Structures/BIT.cpp)
+- [Difference Array](./Data%20Structures/Difference%20Array.cpp)
+- [Disjoint Set Union (DSU)](./Data%20Structures/DSU.cpp)
+- [Kadane's Algorithm](./Data%20Structures/Kadane.cpp)
+- [2D Prefix Sum](./Data%20Structures/Prefix%202D.cpp)
+- [Segment Tree](./Data%20Structures/Segment%20Tree.cpp)
+- [Subarrays](./Data%20Structures/Subarrays.cpp)
 
-### Grafos
+### Graph Theory
 
-- [Dijkstra](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Grafos/dijkstra)
-- [Floyd-Warshall](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Grafos/floydWarshall.cpp)
+- [Bellman-Ford](./Graph%20Theory/Bellman%20Ford.cpp)
+- [Breadth-First Search (BFS)](./Graph%20Theory/BFS.cpp)
+- [Bipartite Check](./Graph%20Theory/Bipartite%20Check.cpp)
+- [Cycle Detection](./Graph%20Theory/Cycle%20Detection.cpp)
+- [Dijkstra](./Graph%20Theory/Dijkstra.cpp)
+- [Floyd-Warshall](./Graph%20Theory/Floyd%20Warshall.cpp)
+- [Kruskal](./Graph%20Theory/Kruskal.cpp)
 
-### Matemática
+### Mathematics
 
-- [Algoritmo de Euclides](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Matematica/gcd.cpp)
-- [Algoritmo de Euclides Estendido](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Matematica/gcdExtended.cpp)
-- [Algoritmo de Euclides Otimizado](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Matematica/gcdBinary.cpp)
-- [Crivo de Eratóstenes](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Matematica/sieve.cpp)
-- [Exponenciação Rápida](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Matematica/binPow.cpp)
-- [Função totiente de Euler](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Matematica/phi.cpp)
-- [Inversa Modular](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Matematica/modularInverse.cpp)
-- [Método de Horner para Avaliação Polinomial](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Matematica/Horner.cpp)
-- [Mínimo Múltiplo Comum - MMC](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Matematica/lcm.cpp)
+- [Big Integer (BigInt)](./Math/BigInt.cpp)
+- [Binary Exponentiation](./Math/Binary%20Exponentiation.cpp)
+- [Extended Euclid](./Math/Extended%20Euclid.cpp)
+- [GCD and LCM](./Math/GCD%20and%20LCM.cpp)
+- [Horner's Method](./Math/Horner.cpp)
+- [Modular Inverse](./Math/ModInv.cpp)
+- [Euler's Totient Function](./Math/Phi%20Function.cpp)
+- [Sieve of Eratosthenes](./Math/Sieve.cpp)
 
-### Problemas
+### Strings
 
-- [É Quadrado Perfeito?](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Problemas/perfectSquare.cpp)
-- [Intersecção de Retângulos](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Problemas/rectangleIntersection.cpp)
-- [Permutações de uma String](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Problemas/stringPermutation.cpp)
-- [Problema das 8 Damas](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Problemas/8queensPuzzle.cpp)
-- [Ruína do Jogador](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Problemas/Gambler'sRuin.cpp)
+- [Manacher's Algorithm](./Strings/Manacher.cpp)
 
-### Sorting
+### Miscellaneous
 
-- [Bubble Sort](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Sorting/BubbleSort.cpp)
-- [Inserction Sort](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Sorting/InserctionSort.cpp)
-- [Quick Sort](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Sorting/QuickSort.cpp)
-- [Selection Sort](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Sorting/SelectionSort.cpp)
+- [8 Queens Puzzle](./Miscellaneous/8%20Queens%20Puzzle.cpp)
+- [Distances](./Miscellaneous/Distances.cpp)
+- [Gambler's Ruin](./Miscellaneous/Gamblers%20Ruin.cpp)
+- [Perfect Square](./Miscellaneous/Perfect%20Square.cpp)
+- [Rectangle Intersection](./Miscellaneous/Rectangle%20Intersection.cpp)
+- [Rotate Matrix](./Miscellaneous/Rotate%20Matrix.cpp)
+- [String Permutation](./Miscellaneous/String%20Permutation.cpp)
 
 ### Extra
 
-- [Template](https://github.com/GabrielCFormiga/Biblioteca/blob/main/Codigo/Extra/template.cpp)
+- [Template](./Extra/Template.cpp)
 
-## Referências
+## References
 
 - [cp-algorithms](https://github.com/cp-algorithms/cp-algorithms)
-- [Biblioteca de algoritmos Bruno Maletta](https://github.com/brunomaletta/Biblioteca)
-- [Errichto Constest Library](https://github.com/Errichto/contest_library)
+- [Bruno Maletta's Algorithm Library](https://github.com/brunomaletta/Biblioteca)
+- [Errichto Contest Library](https://github.com/Errichto/contest_library)
+- [ShahjalalShohag Code Library](https://github.com/ShahjalalShohag/code-library)

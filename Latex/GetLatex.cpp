@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include <dirent.h>
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -12,16 +13,30 @@ int HASH_LEN = 3;
 string NO_HASH = "nohash";
 string NO_PRINT = "noprint";
 
-string path = "../Codigo/";
+string path = "../";
+vector<string> target_folders = {
+	"Data Structures",
+	"Dynamic Programming", 
+	"Graph Theory",
+	"Math",
+	"Miscellaneous",
+	"Strings"
+};
 string hash_cmd = "sed -n 1','10000' p' tmp.cpp | sed '/^#w/d' "
 "| cpp -dD -P -fpreprocessed | tr -d '[:space:]' | md5sum | cut -c-";
 
 bool print_all = false;
 
+struct PcloseDeleter {
+	void operator()(FILE* file) const {
+		if (file) pclose(file);
+	}
+};
+
 string exec(string cmd) {
 	array<char, 128> buffer;
 	string result;
-	unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd.c_str(), "r"), pclose);
+	unique_ptr<FILE, PcloseDeleter> pipe(popen(cmd.c_str(), "r"));
 	if (!pipe) throw runtime_error("popen() failed!");
 	while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
 		result += buffer.data();
@@ -29,8 +44,8 @@ string exec(string cmd) {
 	return result;
 }
 
-// linhas [l, r], hash de tamanho size
-string get_hash_arquivo(string s, int size, int l = 0, int r = 1e9) {
+// lines [l, r], hash of size
+string get_file_hash(string s, int size, int l = 0, int r = 1e9) {
 	ifstream fin(s.c_str());
 	ofstream tmp("tmp.cpp", ios::out);
 	string line;
@@ -83,6 +98,105 @@ vector<string> split(string line, char c) {
 	return ret;
 }
 
+string sanitize_utf8_line(const string& line) {
+	string sanitized;
+	for (size_t i = 0; i < line.size(); i++) {
+		unsigned char c = static_cast<unsigned char>(line[i]);
+
+		// Thin/hair spaces (U+2009..U+200F: E2 80 89..8F) -> space
+		if (i + 2 < line.size() && c == 0xE2 &&
+		    static_cast<unsigned char>(line[i + 1]) == 0x80) {
+			unsigned char d = static_cast<unsigned char>(line[i + 2]);
+			if (d >= 0x89 && d <= 0x8F) {
+				sanitized += ' ';
+				i += 2;
+				continue;
+			}
+		}
+		if (c < 0x80) {
+			sanitized += static_cast<char>(c);
+			continue;
+		}
+
+		// UTF-8 thin spaces: U+2009 (E2 80 89), U+200A (E2 80 8A), U+202F (E2 80 AF)
+		if (i + 2 < line.size() && c == 0xE2 &&
+		    static_cast<unsigned char>(line[i + 1]) == 0x80 &&
+		    (static_cast<unsigned char>(line[i + 2]) == 0x89 ||
+		     static_cast<unsigned char>(line[i + 2]) == 0x8A ||
+		     static_cast<unsigned char>(line[i + 2]) == 0xAF)) {
+			sanitized += ' ';
+			i += 2;
+			continue;
+		}
+
+		// Non-breaking space (U+00A0: C2 A0)
+		if (i + 1 < line.size() && c == 0xC2 &&
+		    static_cast<unsigned char>(line[i + 1]) == 0xA0) {
+			sanitized += ' ';
+			i += 1;
+			continue;
+		}
+
+		// Multiplication dot (U+00B7: C2 B7) -> '*'
+		if (i + 1 < line.size() && c == 0xC2 &&
+		    static_cast<unsigned char>(line[i + 1]) == 0xB7) {
+			sanitized += '*';
+			i += 1;
+			continue;
+		}
+
+		// Ordinal indicator (U+00BA: C2 BA) -> 'o'
+		if (i + 1 < line.size() && c == 0xC2 &&
+		    static_cast<unsigned char>(line[i + 1]) == 0xBA) {
+			sanitized += 'o';
+			i += 1;
+			continue;
+		}
+
+		// Common accented letters (C3 xx)
+		if (i + 1 < line.size() && c == 0xC3) {
+			unsigned char d = static_cast<unsigned char>(line[i + 1]);
+			switch (d) {
+				case 0xA1: case 0xA0: case 0xA2: case 0xA3: sanitized += 'a'; break;
+				case 0xA7: sanitized += 'c'; break;
+				case 0xA9: case 0xA8: case 0xAA: sanitized += 'e'; break;
+				case 0xAD: case 0xAC: case 0xAE: sanitized += 'i'; break;
+				case 0xB3: case 0xB2: case 0xB4: case 0xB5: sanitized += 'o'; break;
+				case 0xBA: case 0xB9: case 0xBB: sanitized += 'u'; break;
+				case 0x81: case 0x80: case 0x82: case 0x83: sanitized += 'A'; break;
+				case 0x87: sanitized += 'C'; break;
+				case 0x89: case 0x88: case 0x8A: sanitized += 'E'; break;
+				case 0x8D: case 0x8C: case 0x8E: sanitized += 'I'; break;
+				case 0x93: case 0x92: case 0x94: case 0x95: sanitized += 'O'; break;
+				case 0x9A: case 0x99: case 0x9B: sanitized += 'U'; break;
+				default: sanitized += ' '; break;
+			}
+			i += 1;
+			continue;
+		}
+
+		// Skip any other multi-byte sequence.
+		if ((c & 0xE0) == 0xC0 && i + 1 < line.size()) {
+			i += 1;
+			sanitized += ' ';
+			continue;
+		}
+		if ((c & 0xF0) == 0xE0 && i + 2 < line.size()) {
+			i += 2;
+			sanitized += ' ';
+			continue;
+		}
+		if ((c & 0xF8) == 0xF0 && i + 3 < line.size()) {
+			i += 3;
+			sanitized += ' ';
+			continue;
+		}
+
+		sanitized += ' ';
+	}
+	return sanitized;
+}
+
 set<string> get_flags(string file) {
 	ifstream fin(file.c_str());
 	string line;
@@ -110,7 +224,7 @@ void remove_flags(string& line) {
 	while (line.size() and line.back() == ' ') line.pop_back();
 }
 
-void printa_arquivo_codigo(string file, bool extra = false) {
+void print_code_file(string file, bool extra = false) {
 	cout << "\\begin{lstlisting}\n";
 	ifstream fin(file.c_str());
 	string line;
@@ -131,7 +245,7 @@ void printa_arquivo_codigo(string file, bool extra = false) {
 		if (!comment) started_code = true;
 
 		if (!extra and started_code) {
-			string hash = get_hash_arquivo(file, HASH_LEN, start_line, line_idx);
+			string hash = get_file_hash(file, HASH_LEN, start_line, line_idx);
 
 			if (comment) {
 				if (depth != 0) {
@@ -140,13 +254,13 @@ void printa_arquivo_codigo(string file, bool extra = false) {
 				}
 			} else cout << hash << " ";
 		}
-		cout << line << endl;
+		cout << sanitize_utf8_line(line) << endl;
 	}
 	fin.close();
 	cout << "\\end{lstlisting}\n\n";
 }
 
-void printa_arquivo(string file, bool extra = false) {
+void print_file(string file, bool extra = false) {
 	ifstream fin(file.c_str());
 	string line;
 	int count = 0;
@@ -167,7 +281,7 @@ string get_name(string file) {
 	return line.substr(2);
 }
 
-void printa_cuidado(string s) {
+void print_escaped(string s) {
 	for (char c : s) {
 		if (c == '^') cout << '\\';
 		cout << c;
@@ -175,23 +289,23 @@ void printa_cuidado(string s) {
 	}
 }
 
-bool printa_listing(string sub, string file, bool extra = false) {
+bool print_listing(string sub, string file, bool extra = false) {
 	set<string> flags = get_flags(file);
 
 	if (!print_all and flags.count(NO_PRINT)) return false;
 
 	if (LOOK_FOR_HASH_IN_FILE and !extra and !flags.count(NO_HASH)) {
-		if (!find_in_file(file, get_hash_arquivo(file, HASH_LEN)))
-			cerr << RED << "WARNING" << RESET << ": hash nao encontrado para: "
+		if (!find_in_file(file, get_file_hash(file, HASH_LEN)))
+			cerr << RED << "WARNING" << RESET << ": hash not found for: "
 			<< file.substr(10) << '\n';
 	}
 
 	cout << "\\subsection{";
-	if (!extra) printa_cuidado(get_name(file));
-	else printa_cuidado(sub);
+	if (!extra) print_escaped(get_name(file));
+	else print_escaped(sub);
 	cout << "}\n";
 
-	printa_arquivo_codigo(file, extra);
+	print_code_file(file, extra);
 	return true;
 }
 
@@ -205,15 +319,15 @@ void dfs(vector<pair<string, string>>& files, string s, bool extra = false) {
 		if (entry->d_type == DT_DIR) dfs(files, s + "/" + string(entry->d_name), extra);
 		else {
 			if (!extra) files.emplace_back(entry->d_name, s + "/" + string(entry->d_name));
-			else printa_listing(entry->d_name, s + "/" + entry->d_name,
+			else print_listing(entry->d_name, s + "/" + entry->d_name,
 					extra and strcmp(entry->d_name, "vimrc"));
-			//	A condicao acima printa o hash do vimrc.
-			//	Para tirar, deixar apenas "extra".
+			//	The condition above prints the hash for vimrc.
+			//	To remove it, use just "extra".
 		}
 	}
 }
 
-void printa_section(string s) {
+void print_section(string s) {
 	cout << "\n\n";
 
 	for (int i = 0; i < 20; i++) cout << "%";
@@ -238,35 +352,35 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	printa_arquivo("comeco.tex", true);
-	struct dirent* entry = nullptr;
-	DIR* dp = nullptr;
-	dp = opendir(path.c_str());
-	if (dp != nullptr) while (entry = readdir(dp)) {
-		if (entry->d_name[0] == '.') continue;
-		if (entry->d_type != DT_DIR) continue;
-
-		string dir(entry->d_name);
-		if (dir == "Extra") continue;
-		printa_section(dir);
+	print_file("Header.tex", true);
+	
+	for (string dir : target_folders) {
+		string full_path = path + dir;
+		struct stat info;
+		if (stat(full_path.c_str(), &info) != 0 || !(info.st_mode & S_IFDIR)) {
+			cerr << "Warning: Directory not found: " << dir << endl;
+			continue;
+		}
+		
+		print_section(dir);
 
 		vector<pair<string, string>> files;
-		dfs(files, path + dir);
+		dfs(files, full_path);
 
 		sort(files.begin(), files.end(), [&](auto f1, auto f2) {
 			return lower(get_name(f1.second)) < lower(get_name(f2.second));
 		});
 
 		cerr << "=== " << dir << " ===" << endl;
-		for (auto [f, path] : files) {
-			bool printed = printa_listing(f.substr(0, f.size() - 4), path);
-			if (printed) cerr << get_name(path) << endl;
+		for (auto [f, file_path] : files) {
+			bool printed = print_listing(f.substr(0, f.size() - 4), file_path);
+			if (printed) cerr << get_name(file_path) << endl;
 		}
 		cerr << endl;
 	}
 
 	cout << "\\pagebreak" << endl;
-	printa_section("Extra");
+	print_section("Extra");
 	vector<pair<string, string>> files;
 	dfs(files, path + "Extra", true);
 
