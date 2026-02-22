@@ -1,13 +1,24 @@
-# Library
+# UFPB Competitive Programming Library
 
-This library is a collection of algorithms to assist in programming competitions. 
+This repository contains a curated collection of algorithms and data structures optimized for competitive programming.
 
-The [sources](#references) are from codes already implemented by advanced competitors, programming books, forums,
-or even personal modifications.
+It serves as the official reference library for teams representing the Federal University of Paraíba (UFPB).
 
-The codes are implemented in C++.
+The primary goal is to provide C++ implementations that are high-performance, robust, and easy to integrate under the time constraints of a live contest.
 
 ## Contents
+
+### Data Structures
+
+- [2D Prefix Sum](./Data%20Structures/Prefix%202D.cpp)
+- [BIT (Fenwick Tree)](./Data%20Structures/BIT.cpp)
+- [Difference Array](./Data%20Structures/Difference%20Array.cpp)
+- [Disjoint Set Union (DSU)](./Data%20Structures/DSU.cpp)
+- [Kadane's Algorithm](./Data%20Structures/Kadane.cpp)
+- [Minimum Queue](./Data%20Structures/Minimum%20Queue.cpp)
+- [Segment Tree](./Data%20Structures/Segment%20Tree.cpp)
+- [Sparse Table](./Data%20Structures/Sparse%20Table.cpp)
+- [Subarrays](./Data%20Structures/Subarrays.cpp)
 
 ### Dynamic Programming
 
@@ -17,22 +28,11 @@ The codes are implemented in C++.
 - [Longest Increasing Subsequence (LIS)](./Dynamic%20Programming/LIS.cpp)
 - [Subset Sum](./Dynamic%20Programming/Subset%20Sum.cpp)
 
-### Data Structures
-
-- [BIT (Fenwick Tree)](./Data%20Structures/BIT.cpp)
-- [Difference Array](./Data%20Structures/Difference%20Array.cpp)
-- [Disjoint Set Union (DSU)](./Data%20Structures/DSU.cpp)
-- [Kadane's Algorithm](./Data%20Structures/Kadane.cpp)
-- [Minimum Queue](./Data%20Structures/Minimum%20Queue.cpp)
-- [2D Prefix Sum](./Data%20Structures/Prefix%202D.cpp)
-- [Segment Tree](./Data%20Structures/Segment%20Tree.cpp)
-- [Subarrays](./Data%20Structures/Subarrays.cpp)
-
 ### Graph Theory
 
 - [Bellman-Ford](./Graph%20Theory/Bellman%20Ford.cpp)
-- [Breadth-First Search (BFS)](./Graph%20Theory/BFS.cpp)
 - [Bipartite Check](./Graph%20Theory/Bipartite%20Check.cpp)
+- [Breadth-First Search (BFS)](./Graph%20Theory/BFS.cpp)
 - [Cycle Detection](./Graph%20Theory/Cycle%20Detection.cpp)
 - [Dijkstra](./Graph%20Theory/Dijkstra.cpp)
 - [Floyd-Warshall](./Graph%20Theory/Floyd%20Warshall.cpp)
@@ -42,12 +42,13 @@ The codes are implemented in C++.
 
 - [Big Integer (BigInt)](./Math/BigInt.cpp)
 - [Binary Exponentiation](./Math/Binary%20Exponentiation.cpp)
+- [Euler's Totient Function](./Math/Phi%20Function.cpp)
 - [Extended Euclid](./Math/Extended%20Euclid.cpp)
 - [GCD and LCM](./Math/GCD%20and%20LCM.cpp)
 - [Horner's Method](./Math/Horner.cpp)
 - [Modular Inverse](./Math/ModInv.cpp)
-- [Euler's Totient Function](./Math/Phi%20Function.cpp)
 - [Sieve of Eratosthenes](./Math/Sieve.cpp)
+- [Wheel Factorization](./Math/Wheel%20Factorization.cpp)
 
 ### Strings
 
