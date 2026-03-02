@@ -57,6 +57,7 @@ The primary goal is to provide C++ implementations that are high-performance, ro
 ### Miscellaneous
 
 - [8 Queens Puzzle](./Miscellaneous/8%20Queens%20Puzzle.cpp)
+- [Coordinate Compression](./Miscellaneous/Coordinate%20Compression.cpp)
 - [Distances](./Miscellaneous/Distances.cpp)
 - [Gambler's Ruin](./Miscellaneous/Gamblers%20Ruin.cpp)
 - [Perfect Square](./Miscellaneous/Perfect%20Square.cpp)
