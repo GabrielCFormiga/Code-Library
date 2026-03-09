@@ -23,3 +23,22 @@ struct CoordinateCompression {
         }
     }
 };
+
+template <typename T>
+struct CoordinateCompression {
+    vector<T> d;
+
+    CoordinateCompression(const vector<T> &vec) {
+        d = vec;
+        sort(d.begin(), d.end());
+        d.erase(unique(d.begin(), d.end()), d.end());
+    }
+
+    int get_id(T x) {
+        return lower_bound(d.begin(), d.end(), x) - d.begin();
+    }
+
+    T get_value(int id) {
+        return d[id];
+    }
+};
