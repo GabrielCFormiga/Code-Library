@@ -6,7 +6,7 @@ struct node {
     node() {
         val = 0;
     }
-    node(int val) : val(val) {
+    node(ll val) : val(val) {
     }
     node operator + (const node &rhs) const {
         return node(val + rhs.val);
@@ -17,6 +17,10 @@ struct node {
 struct SegTree {
     int n;
     vector<node> t;
+
+    SegTree(int n) : n(n) {
+        t.assign(4 * n, node());
+    }
 
     SegTree(vector<int> &a) {
         n = a.size();
