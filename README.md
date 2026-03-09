@@ -14,6 +14,7 @@ The primary goal is to provide C++ implementations that are high-performance, ro
 - [BIT (Fenwick Tree)](./Data%20Structures/BIT.cpp)
 - [Difference Array](./Data%20Structures/Difference%20Array.cpp)
 - [Disjoint Set Union (DSU)](./Data%20Structures/DSU.cpp)
+- [Indexed Set](./Data%20Structures/Indexed%20Set.cpp)
 - [Kadane's Algorithm](./Data%20Structures/Kadane.cpp)
 - [Minimum Queue](./Data%20Structures/Minimum%20Queue.cpp)
 - [Segment Tree](./Data%20Structures/Segment%20Tree.cpp)
