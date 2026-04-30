@@ -1,4 +1,24 @@
-# UFPB Competitive Programming Library
+<p align="center">
+  <img src="./assets/pacode-logo.png" alt="pacode logo" width="320">
+</p>
+
+<h1 align="center">UFPB Competitive Programming Library</h1>
+
+<p align="center"><i>C++ algorithms and data structures used by UFPB teams in ICPC contests.</i></p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/license/GabrielCFormiga/Code-Library?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/C%2B%2B-17-blue?style=flat-square&logo=cplusplus" alt="C++17">
+  <img src="https://img.shields.io/github/stars/GabrielCFormiga/Code-Library?style=flat-square" alt="Stars">
+  <img src="https://img.shields.io/github/last-commit/GabrielCFormiga/Code-Library?style=flat-square" alt="Last commit">
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat-square" alt="PRs welcome">
+</p>
+
+<p align="center">
+  <a href="./PDF/Library.pdf"><b>📄 Printable Reference (PDF)</b></a> ·
+  <a href="./Latex/">LaTeX source</a> ·
+  <a href="./Extra/Template.cpp">Contest template</a>
+</p>
 
 This repository contains a curated collection of algorithms and data structures optimized for competitive programming.
 
@@ -76,3 +96,7 @@ The primary goal is to provide C++ implementations that are high-performance, ro
 - [Bruno Maletta's Algorithm Library](https://github.com/brunomaletta/Biblioteca)
 - [Errichto Contest Library](https://github.com/Errichto/contest_library)
 - [ShahjalalShohag Code Library](https://github.com/ShahjalalShohag/code-library)
+
+---
+
+<p align="center">Made by team <b>pacode</b> @ UFPB · Licensed under the <a href="./LICENSE">MIT License</a></p>
