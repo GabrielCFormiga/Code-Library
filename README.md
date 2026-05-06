@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="./PDF/Library.pdf"><b>📄 Printable Reference (PDF)</b></a> ·
+  <a href="./PDF/Library.pdf">Printable Reference (PDF)</a> ·
   <a href="./Latex/">LaTeX source</a> ·
   <a href="./Extra/Template.cpp">Contest template</a>
 </p>
@@ -99,4 +99,4 @@ The primary goal is to provide C++ implementations that are high-performance, ro
 
 ---
 
-<p align="center">Made by team <b>pacode</b> @ UFPB · Licensed under the <a href="./LICENSE">MIT License</a></p>
+<p align="center">Made by team pacode @ UFPB · Licensed under the <a href="./LICENSE">MIT License</a></p>
