@@ -1,39 +1,33 @@
 // BIT
 //
-// build - O(n)
-// update - O(log(n))
-// query - O(log(n))
 
 struct BIT {
-	vector<ll> bit;
 	int n;
+	vector<ll> t;
 
-	BIT(int n) {
-		this->n = n;
-		bit.assign(n, 0);
+	BIT(int n) : n(n) {
+		t.assign(n, 0);
 	}
-
-	BIT(vector<ll> const &a) : BIT(a.size()) {
+	BIT(vector<ll> const &a) {
+		n = a.size();
+		t.assign(n, 0);
 		for (int i = 0; i < a.size(); ++i) {
-			bit[i] += a[i];
+			t[i] += a[i];
 			int r = i | (i + 1);
-			if (r < n) bit[r] += bit[i];
+			if (r < n) t[r] += t[i];
 		}
 	}
-
-	ll sum(int r) {
+	
+	ll query(int r) {
 		ll ret = 0;
-		for (; r >= 0; r = (r & (r + 1)) - 1)
-			ret += bit[r];
+		for (; r >= 0; r = (r & (r + 1)) - 1) ret += t[r];
 		return ret;
 	}
-
-	ll sum(int l, int r) {
-		return sum(r) - sum(l - 1);
+	ll query(int l, int r) {
+		return query(r) - query(l - 1);
 	}
 
-	void add(int idx, ll delta) {
-		for (; idx < n; idx = idx | (idx + 1))
-			bit[idx] += delta;
+	void update(int i, ll add) {
+		for (; i < n; i = i | (i + 1)) t[i] += add;
 	}
 };
