@@ -13,14 +13,14 @@ struct BIT {
 		t.assign(n + 1, 0);
 		for (int i = 1; i <= n; ++i) {
 			t[i] += a[i - 1];
-			int r = i + (i & -i);
-			if (r <= n) t[r] += t[i];
+			int j = i + (i & -i);
+			if (j <= n) t[j] += t[i];
 		}
 	}
 
-	ll query(int r) {
+	ll query(int i) {
 		ll ret = 0;
-		for (++r; r > 0; r -= r & -r) ret += t[r];
+		for (++i; i > 0; i -= i & -i) ret += t[i];
 		return ret;
 	}
 	ll query(int l, int r) {

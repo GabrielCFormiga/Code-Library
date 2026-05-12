@@ -32,6 +32,7 @@ The primary goal is to provide C++ implementations that are high-performance, ro
 
 - [2D Prefix Sum](./Data%20Structures/Prefix%202D.cpp)
 - [BIT (Fenwick Tree)](./Data%20Structures/BIT.cpp)
+- [BIT with Range Update and Point Query](./Data%20Structures/BIT%20with%20Range%20Update%20and%20Point%20Query.cpp)
 - [Difference Array](./Data%20Structures/Difference%20Array.cpp)
 - [Disjoint Set Union (DSU)](./Data%20Structures/DSU.cpp)
 - [Indexed Set](./Data%20Structures/Indexed%20Set.cpp)
