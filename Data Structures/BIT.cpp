@@ -6,21 +6,21 @@ struct BIT {
 	vector<ll> t;
 
 	BIT(int n) : n(n) {
-		t.assign(n, 0);
+		t.assign(n + 1, 0);
 	}
 	BIT(vector<ll> const &a) {
 		n = a.size();
-		t.assign(n, 0);
-		for (int i = 0; i < a.size(); ++i) {
-			t[i] += a[i];
-			int r = i | (i + 1);
-			if (r < n) t[r] += t[i];
+		t.assign(n + 1, 0);
+		for (int i = 1; i <= n; ++i) {
+			t[i] += a[i - 1];
+			int r = i + (i & -i);
+			if (r <= n) t[r] += t[i];
 		}
 	}
-	
+
 	ll query(int r) {
 		ll ret = 0;
-		for (; r >= 0; r = (r & (r + 1)) - 1) ret += t[r];
+		for (++r; r > 0; r -= r & -r) ret += t[r];
 		return ret;
 	}
 	ll query(int l, int r) {
@@ -28,6 +28,6 @@ struct BIT {
 	}
 
 	void update(int i, ll add) {
-		for (; i < n; i = i | (i + 1)) t[i] += add;
+		for (++i; i <= n; i += i & -i) t[i] += add;
 	}
 };
