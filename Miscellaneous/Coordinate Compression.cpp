@@ -4,6 +4,7 @@
 template <typename T>
 struct CoordinateCompression {
     int n;
+    int m;
     vector<int> compressed;
     vector<T> original;
 
@@ -21,6 +22,7 @@ struct CoordinateCompression {
             if(i > 0 && pairs[i-1].first != pairs[i].first) nxt++;
             compressed[pairs[i].second] = nxt;
         }
+        m = nxt + 1;
     }
 };
 
