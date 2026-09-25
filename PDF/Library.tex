@@ -79,43 +79,73 @@ keepspaces=true
 
 \subsection{BIT}
 \begin{lstlisting}
-// build - O(n)
-// update - O(log(n))
-// query - O(log(n))
 
 714 struct BIT {
-406 	vector<ll> bit;
 1a8 	int n;
+41a 	vector<ll> t;
     
-32c 	BIT(int n) {
-b75 		this->n = n;
-a72 		bit.assign(n, 0);
-3a4 	}
+60a 	BIT(int n) : n(n) {
+52a 		t.assign(n + 1, 0);
+55a 	}
+bf6 	BIT(vector<ll> const &a) {
+9dc 		n = a.size();
+52a 		t.assign(n + 1, 0);
+3f2 		for (int i = 1; i <= n; ++i) {
+a82 			t[i] += a[i - 1];
+edf 			int j = i + (i & -i);
+7d3 			if (j <= n) t[j] += t[i];
+dff 		}
+66c 	}
     
-14d 	BIT(vector<ll> const &a) : BIT(a.size()) {
-eb6 		for (int i = 0; i < a.size(); ++i) {
-a76 			bit[i] += a[i];
-136 			int r = i | (i + 1);
-1f8 			if (r < n) bit[r] += bit[i];
-cc4 		}
-c72 	}
-    
-ad7 	ll sum(int r) {
+74a 	ll query(int i) {
 b73 		ll ret = 0;
-817 		for (; r >= 0; r = (r & (r + 1)) - 1)
-b6b 			ret += bit[r];
+098 		for (++i; i > 0; i -= i & -i) ret += t[i];
 edf 		return ret;
-ad0 	}
+07c 	}
+02a 	ll query(int l, int r) {
+a4e 		return query(r) - query(l - 1);
+485 	}
     
-77a 	ll sum(int l, int r) {
-67b 		return sum(r) - sum(l - 1);
-b26 	}
+df2 	void update(int i, ll add) {
+e35 		for (++i; i <= n; i += i & -i) t[i] += add;
+469 	}
+718 };
+\end{lstlisting}
+
+\subsection{BIT with Range Update and Point Query}
+\begin{lstlisting}
+
+714 struct BIT {
+1a8     int n;
+41a     vector<ll> t;
     
-f52 	void add(int idx, ll delta) {
-718 		for (; idx < n; idx = idx | (idx + 1))
-7ed 			bit[idx] += delta;
-ac0 	}
-53d };
+60a     BIT(int n) : n(n) {
+52a         t.assign(n + 1, 0);
+55a     }
+bf6     BIT(vector<ll> const &a) {
+9dc         n = a.size();
+52a         t.assign(n + 1, 0);
+3f2         for (int i = 1; i <= n; ++i) {
+9af 			t[i] += a[i-1] - (i > 1 ? a[i-2] : 0);
+edf 			int j = i + (i & -i);
+7d3 			if (j <= n) t[j] += t[i];
+fc4 		}
+b38     }
+    
+74a     ll query(int i) {
+b73         ll ret = 0;
+098         for (++i; i > 0; i -= i & -i) ret += t[i];
+edf         return ret;
+07c     }
+    
+df2     void update(int i, ll add) {
+e35         for (++i; i <= n; i += i & -i) t[i] += add;
+469     }
+f82     void update(int l, int r, ll add) {
+1c3         update(l, add);
+865         update(r + 1, -add);
+144     }
+320 };
 \end{lstlisting}
 
 \subsection{Difference Arrays}
@@ -189,6 +219,36 @@ bd6                 rank[a]++;
 4fd };
 \end{lstlisting}
 
+\subsection{Indexed Set}
+\begin{lstlisting}
+
+// These lines are needed for the policy-based data structures.
+774 #include <ext/pb_ds/assoc_container.hpp>
+0d7 using namespace __gnu_pbds;
+
+4fc template <class T>
+2a8 using indexed_set = tree<T, null_type, less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+
+// Definition:
+e5f template<
+e09     typename Key, // Key type
+140     typename Mapped, // Mapped-policy
+2a4     typename Cmp_Fn = std::less<Key>, // Key comparison function
+ed4     typename Tag = rb_tree_tag, // Inner Data structure
+657     typename Node_Update = null_node_update, // Node update policy
+670     typename Allocator = std::allocator<char> // Allocator type
+70c     > class tree;
+
+// Methods:
+// 1. insert(x): Inserts x into the set.
+// 2. erase(x): Removes x from the set.
+// 3. find(x): Returns an iterator to the element x if it exists, or end() if it doesn't.
+// 4. find_by_order(k): Returns an iterator to the k-th smallest element (0-based index).
+// 5. order_of_key(x): Returns the number of elements in the set that are strictly less than x.
+// 6. lower_bound(x): Returns an iterator to the first element that is not less than x.
+// 7. upper_bound(x): Returns an iterator to the first element that is greater than x.
+\end{lstlisting}
+
 \subsection{Kadane}
 \begin{lstlisting}
 // Calcula o subarray com maior soma em O(n)
@@ -201,8 +261,42 @@ ad4         curr += x;
 e95         mx = max(mx, curr);
 f67         curr = max(curr, 0);
 9d6     }
-55e     return curr;
-b0d }
+b9a     return mx;
+ce6 }
+\end{lstlisting}
+
+\subsection{Minimum Queue}
+\begin{lstlisting}
+
+14f struct MinQueue {
+f23     stack<pair<int,int>> s1, s2;
+    
+619     void push(int val) {
+1f7         int mn = s1.empty() ? val : min(val, s1.top().second);
+f5f         s1.push({val, mn});
+97e     }
+    
+42d     void pop() {
+fb8         if (s2.empty()) {
+71d             while (!s1.empty()) {
+0d5                 int val = s1.top().first;
+66a                 s1.pop();
+381                 int mn = s2.empty() ? val : min(val, s2.top().second);
+f89                 s2.push({val, mn});
+c20             }
+825         }
+a3f         int rm = s2.top().first;
+0f5         s2.pop();
+073     }
+    
+034     int getMin() {
+69f         if (s1.empty() || s2.empty()) {
+54f             return s1.empty() ? s2.top().second : s1.top().second;
+a63         } else {
+8e4             return min(s1.top().second, s2.top().second);
+98d         }
+048     }
+790 };
 \end{lstlisting}
 
 \subsection{Prefix 2d}
@@ -219,76 +313,145 @@ bc1 }
 
 \subsection{SegTree}
 \begin{lstlisting}
-// build : O(n)
-// update : O(logn)
-// query : O(logn)
 
-3c9 struct node {
-97f     int val;
-    
-5e1     node() {
-aa1         val = 0;
-            // val = elemento neutro
-a06     }
-    
-a25     node(int val) : val(val) {
-a6f     }
+bf2 struct Node {
+f96     ll val = 0;
+156     Node() = default;
+9e3     Node(ll v) : val(v) {}
+4fa     Node operator+(const Node &rhs) const { return Node(val + rhs.val); }
+b57 };
+
+a0a template <typename Node>
+383 struct SegTree {
+1a8     int n;
+f5b     vector<Node> t;
         
-40c     node operator + (const node &rhs) const {
-6d8         return node(val + rhs.val);
-            // return node(val op rhs.val);
-ad2     }
-772 };
+4a2     SegTree(int n) : n(n), t(4 * n) {}
+ef3     SegTree(const vector<ll> &a) : SegTree(a.size()) {
+77f         build(1, 0, n - 1, a);
+975     }
+    
+1b3     void build(int pos, int tl, int tr, const vector<ll> &a) {
+171         if(tl == tr) { t[pos] = Node(a[tl]); return; }
+43e         int tm = (tl + tr) / 2;
+930         build(2 * pos, tl, tm, a);
+c04         build(2 * pos + 1, tm + 1, tr, a);
+36f         t[pos] = t[2 * pos] + t[2 * pos + 1];
+e17     }
+    
+7dd     void update(int i, ll new_val, int pos, int tl, int tr) {
+d63         if(tl == tr) { t[pos] = Node(new_val); return; }
+43e         int tm = (tl + tr) / 2;
+b5b         if(i <= tm) update(i, new_val, 2 * pos, tl, tm);
+e6b         else update(i, new_val, 2 * pos + 1, tm + 1, tr);
+36f         t[pos] = t[2 * pos] + t[2 * pos + 1];
+e86     }
+0e2     void update(int i, ll new_val) { update(i, new_val, 1, 0, n - 1); }
+    
+587     Node query(int l, int r, int pos, int tl, int tr) {
+439         if(r < tl || tr < l) return Node();
+b20         if(l <= tl && tr <= r) return t[pos];
+43e         int tm = (tl + tr) / 2;
+981         return query(l, r, 2 * pos, tl, tm) + query(l, r, 2 * pos + 1, tm + 1, tr);
+ec4     }
+75a     Node query(int l, int r) { return query(l, r, 1, 0, n - 1); }
+da6 };
+\end{lstlisting}
+
+\subsection{SegTree Lazy}
+\begin{lstlisting}
+
+bf2 struct Node {
+f96     ll val = 0;
+156     Node() = default;
+da3     Node(ll val) : val(val) {}
+4fa     Node operator+(const Node &rhs) const { return Node(val + rhs.val); }
+922 };
 
 383 struct SegTree {
 1a8     int n;
-093     vector<node> st;
+f5b     vector<Node> t;
+df1     vector<ll> lazy;
     
-bd8     SegTree(){}
-dd4     SegTree(int n) : n(n) {
-502         st.resize(4 * n + 2);
-2d1     } 
-d75     SegTree(vector<int> &a) {
-9dc         n = a.size();
-502         st.resize(4 * n + 2);
+901     SegTree(int n) : n(n), t(4 * n), lazy(4 * n, 0) {}
+ef3     SegTree(const vector<ll> &a) : SegTree(a.size()) {
 77f         build(1, 0, n - 1, a);
-fa6     }
+975     }
     
-a6c     void build(int pos, int l, int r, vector<int> &a) {
-893         if(l == r) {
-76e             st[pos] = node(a[l]);
-505             return; 
-b03         }
-f7e         int mi = (l + r) / 2;
-b01         build(2 * pos, l, mi, a);
-e9b         build(2 * pos + 1, mi + 1, r, a);
-4f4         st[pos] = st[2 * pos] + st[2 * pos + 1];
-3eb     }
+1b3     void build(int pos, int tl, int tr, const vector<ll> &a) {
+171         if (tl == tr) { t[pos] = Node(a[tl]); return; }
+43e         int tm = (tl + tr) / 2;
+930         build(2 * pos, tl, tm, a);
+c04         build(2 * pos + 1, tm + 1, tr, a);
+36f         t[pos] = t[2 * pos] + t[2 * pos + 1];
+e17     }
     
-ea5     void update(int x, int y, int pos, int l, int r) { //void update(int x, node y, int pos, int l, int r)
-893         if(l == r) {
-90b             st[pos] = node(y); //st[pos] = y;
-505             return;
-cdd         }
-f7e         int mi = (l + r) / 2;
-a9a         if(x <= mi) update(x, y, 2 * pos, l, mi);
-40b         else update(x, y, 2 * pos + 1, mi + 1, r);
-4f4         st[pos] = st[2 * pos] + st[2 * pos + 1];
-bc4     }
-105     void update(int x, int y) { // void update(int x, node y)
-051         update(x, y, 1, 0, n - 1);
-2ec     }
+5c6     void apply(int pos, int tl, int tr, ll add) {
+da3         t[pos].val += add * (tr - tl + 1);
+            // p/ min/max: t[pos].val += add
+2ec         lazy[pos]  += add;
+bde     }
     
-052     node query(int x, int y, int pos, int l, int r) {
-fe9         if(y < l || r < x) return node();
-c0e         if(x <= l && r <= y) return st[pos];
-f7e         int mi = (l + r) / 2;
-5f9         return query(x, y, 2 * pos, l, mi) + query(x, y, 2 * pos + 1, mi + 1, r);
-6e5     }
-9a5     node query(int x, int y) {
-0c9         return query(x, y, 1, 0, n - 1);
-cb8     }
-b73 };
+0d1     void push(int pos, int tl, int tr) {
+eaf         if (lazy[pos] != 0) {
+43e             int tm = (tl + tr) / 2;
+2d5             apply(2 * pos, tl, tm, lazy[pos]);
+e1a             apply(2 * pos + 1, tm + 1, tr, lazy[pos]);
+ff0             lazy[pos] = 0;
+88c         }
+101     }
+    
+ff7     void update(int l, int r, ll add, int pos, int tl, int tr) {
+645         if (tr < l || r < tl) return;
+705         if (l <= tl && tr <= r) { apply(pos, tl, tr, add); return; }
+efd         push(pos, tl, tr);
+43e         int tm = (tl + tr) / 2;
+0b9         update(l, r, add, 2 * pos, tl, tm);
+c98         update(l, r, add, 2 * pos + 1, tm + 1, tr);
+36f         t[pos] = t[2 * pos] + t[2 * pos + 1];
+5bd     }
+e13     void update(int l, int r, ll add) { update(l, r, add, 1, 0, n - 1); }
+    
+587     Node query(int l, int r, int pos, int tl, int tr) {
+439         if (r < tl || tr < l) return Node();
+b20         if (l <= tl && tr <= r) return t[pos];
+efd         push(pos, tl, tr);
+43e         int tm = (tl + tr) / 2;
+981         return query(l, r, 2 * pos, tl, tm) + query(l, r, 2 * pos + 1, tm + 1, tr);
+3e4     }
+04c     Node query(int l, int r) {
+ce1         return query(l, r, 1, 0, n - 1);
+75a     }
+5b1 };
+\end{lstlisting}
+
+\subsection{Sparse Table}
+\begin{lstlisting}
+
+67a template <typename T>
+7e9 struct SparseTable {
+bb5     vector<vector<T>> st;
+dca     int n, k; // k = 24 is enough for n <= 10^7
+    
+1cb     T op(T a, T b) { 
+a3e         return std::min(a, b); 
+a97     }
+    
+10b     SparseTable(const vector<T> &vec) {
+444         n = vec.size();
+515         k = __lg(n) + 1;
+6ca         st.assign(k + 1, vector<T>(n));
+232         for (int j = 0; j < n; j++) st[0][j] = vec[j];
+c79         for (int i = 1; i <= k; i++) 
+064             for (int j = 0; j + (1 << i) <= n; j++) 
+4b5                 st[i][j] = op(st[i - 1][j], st[i - 1][j + (1 << (i - 1))]);
+2f6     }
+    
+b7a     T query(int l, int r) {
+28c         int i = __lg(r - l + 1);
+06d         return op(st[i][l], st[i][r - (1 << i) + 1]);
+a5c     }
+e54 };
 \end{lstlisting}
 
 \subsection{Subarrays}
@@ -1069,6 +1232,33 @@ dc8     return result;
 f2a }
 \end{lstlisting}
 
+\subsection{Wheel Factorization}
+\begin{lstlisting}
+// https://www.spoj.com/status/FACT0,gabrielcampfor/
+//
+
+38d vector<ll> wheel(ll n) {
+349     vector<ll> factorization;
+0ca     for (int d : {2, 3, 5}) {
+8bf         while (n % d == 0) {
+583             factorization.push_back(d);
+833             n /= d;
+40a         }
+0be     }
+142     static array<int, 8> increments = {4, 2, 4, 2, 4, 6, 2, 6};
+181     int i = 0;
+61a     for (ll d = 7; d * d <= n; d += increments[i++]) {
+8bf         while (n % d == 0) {
+583             factorization.push_back(d);
+833             n /= d;
+40a         }
+04e         if (i == 8) i = 0;
+203     }
+0ec     if (n > 1) factorization.push_back(n);
+04d     return factorization;
+a30 }
+\end{lstlisting}
+
 
 
 %%%%%%%%%%%%%%%%%%%%
@@ -1078,6 +1268,54 @@ f2a }
 %%%%%%%%%%%%%%%%%%%%
 
 \section{Miscellaneous}
+
+\subsection{Coordinate Compression}
+\begin{lstlisting}
+
+67a template <typename T>
+851 struct CoordinateCompression {
+1a8     int n;
+2e6     int m;
+d88     vector<int> compressed;
+371     vector<T> original;
+    
+f7b     CoordinateCompression(const vector<T> &vec) {
+444         n = vec.size();
+964         original = vec;
+2d3         compressed.assign(n, 0);
+53c         vector<pair<T, int>> pairs(n);
+bae         for (int i = 0; i < n; ++i) {
+131             pairs[i] = {vec[i], i};
+4ed         }
+063         sort(pairs.begin(), pairs.end());
+b1d         int nxt = 0;
+bae         for (int i = 0; i < n; ++i) {
+98b             if(i > 0 && pairs[i-1].first != pairs[i].first) nxt++;
+27b             compressed[pairs[i].second] = nxt;
+5bf         }
+ffb         m = nxt + 1;
+f52     }
+afb };
+
+67a template <typename T>
+851 struct CoordinateCompression {
+aa8     vector<T> d;
+    
+f7b     CoordinateCompression(const vector<T> &vec) {
+8cc         d = vec;
+172         sort(d.begin(), d.end());
+b68         d.erase(unique(d.begin(), d.end()), d.end());
+b39     }
+    
+818     int get_id(T x) {
+1b4         return lower_bound(d.begin(), d.end(), x) - d.begin();
+4b8     }
+    
+ba7     T get_value(int id) {
+012         return d[id];
+07e     }
+1cc };
+\end{lstlisting}
 
 \subsection{Distancias}
 \begin{lstlisting}
