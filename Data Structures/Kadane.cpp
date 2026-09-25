@@ -10,5 +10,5 @@ int kadane(vector<int> &vec) {
         mx = max(mx, curr);
         curr = max(curr, 0);
     }
-    return curr;
+    return mx;
 }
