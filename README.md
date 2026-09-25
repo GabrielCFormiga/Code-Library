@@ -39,6 +39,7 @@ The primary goal is to provide C++ implementations that are high-performance, ro
 - [Kadane's Algorithm](./Data%20Structures/Kadane.cpp)
 - [Minimum Queue](./Data%20Structures/Minimum%20Queue.cpp)
 - [Segment Tree](./Data%20Structures/Segment%20Tree.cpp)
+- [Segment Tree with Lazy Propagation](./Data%20Structures/Segment%20Tree%20Lazy.cpp)
 - [Sparse Table](./Data%20Structures/Sparse%20Table.cpp)
 - [Subarrays](./Data%20Structures/Subarrays.cpp)
 
