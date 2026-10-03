@@ -60,6 +60,7 @@ The primary goal is to provide C++ implementations that are high-performance, ro
 - [Dijkstra](./Graph%20Theory/Dijkstra.cpp)
 - [Floyd-Warshall](./Graph%20Theory/Floyd%20Warshall.cpp)
 - [Kruskal](./Graph%20Theory/Kruskal.cpp)
+- [Strongly Connected Components (SCC)](./Graph%20Theory/SCC.cpp)
 
 ### Mathematics
 
